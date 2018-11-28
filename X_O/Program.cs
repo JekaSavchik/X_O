@@ -16,7 +16,7 @@ namespace X_O
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new X_O());
         }
     }
 }
