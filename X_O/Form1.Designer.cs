@@ -40,10 +40,15 @@
             this.labelPlayer2 = new System.Windows.Forms.Label();
             this.labelPlayer1 = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.labelResult = new System.Windows.Forms.Label();
+            this.panelStart = new System.Windows.Forms.Panel();
+            this.label = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.buttonOK = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.panelStart.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -73,6 +78,7 @@
             this.новаяИграToolStripMenuItem.Name = "новаяИграToolStripMenuItem";
             this.новаяИграToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
             this.новаяИграToolStripMenuItem.Text = "Новая игра";
+            this.новаяИграToolStripMenuItem.Visible = false;
             this.новаяИграToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItemNewGame);
             // 
             // ToolStripMenuItemCreateServe
@@ -133,33 +139,77 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1});
+            this.toolStripStatusLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 439);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(320, 22);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // toolStripStatusLabel1
+            // toolStripStatusLabel
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
-            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            this.toolStripStatusLabel.BackColor = System.Drawing.Color.Red;
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(107, 17);
+            this.toolStripStatusLabel.Text = "Нет подключений";
             // 
             // labelResult
             // 
-            this.labelResult.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.labelResult.BackColor = System.Drawing.Color.LightGray;
+            this.labelResult.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelResult.Location = new System.Drawing.Point(0, 371);
             this.labelResult.Name = "labelResult";
             this.labelResult.Size = new System.Drawing.Size(320, 68);
             this.labelResult.TabIndex = 4;
             this.labelResult.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // panelStart
+            // 
+            this.panelStart.Controls.Add(this.buttonOK);
+            this.panelStart.Controls.Add(this.textBox1);
+            this.panelStart.Controls.Add(this.label);
+            this.panelStart.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelStart.Location = new System.Drawing.Point(0, 24);
+            this.panelStart.Name = "panelStart";
+            this.panelStart.Size = new System.Drawing.Size(320, 415);
+            this.panelStart.TabIndex = 5;
+            // 
+            // label
+            // 
+            this.label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label.Location = new System.Drawing.Point(39, 83);
+            this.label.Name = "label";
+            this.label.Size = new System.Drawing.Size(162, 23);
+            this.label.TabIndex = 0;
+            this.label.Text = "Введите имя";
+            this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox1.Location = new System.Drawing.Point(43, 121);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(230, 26);
+            this.textBox1.TabIndex = 1;
+            // 
+            // buttonOK
+            // 
+            this.buttonOK.AutoEllipsis = true;
+            this.buttonOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonOK.Location = new System.Drawing.Point(189, 350);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(108, 38);
+            this.buttonOK.TabIndex = 2;
+            this.buttonOK.Text = "OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            // 
             // X_O
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(320, 461);
+            this.Controls.Add(this.panelStart);
             this.Controls.Add(this.labelResult);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.labelPlayer1);
@@ -176,6 +226,8 @@
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.panelStart.ResumeLayout(false);
+            this.panelStart.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -193,9 +245,13 @@
         private System.Windows.Forms.Label labelPlayer2;
         private System.Windows.Forms.Label labelPlayer1;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
         private System.Windows.Forms.Label labelResult;
         private System.Windows.Forms.ToolStripMenuItem новаяИграToolStripMenuItem;
+        private System.Windows.Forms.Panel panelStart;
+        private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label;
     }
 }
 

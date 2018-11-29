@@ -18,7 +18,7 @@ namespace X_O
         //поле из 9 картинок
         PictureBox[] GameField = new PictureBox[9];
         //переменные для хранение выбора пользователя и игрока кто кем будет играть.
-        int Player, Computer = 0, Enemy;
+        int Player, Enemy;
 
         //игровое поле в виде цифр для просчета выигрыша
         int[] GameFieldMap = {
@@ -92,14 +92,16 @@ namespace X_O
             }
         }
 
-        void LoockField()
+        void LockedField()
         {
             //блокируем все поле чтобы игрок не мог на него нажать
             foreach (PictureBox P in GameField)
-                P.Enabled = false;
+                Invoke((MethodInvoker)delegate { P.Enabled = false; });
+            labelPlayer1.BackColor = Color.Blue;
+            labelPlayer2.BackColor = Color.Green;
         }
 
-        void UnLoockField()
+        void UnLockedField()
         {
             int Indexx = 0;
             //разблокируем поля но только те которые не заполнены
@@ -110,75 +112,24 @@ namespace X_O
                     Invoke((MethodInvoker)delegate { P.Enabled = true; });
                 //P.Enabled = true;
             }
+            labelPlayer1.BackColor = Color.Green;
+            labelPlayer2.BackColor = Color.Blue;
         }
 
         private void Picture_Click(object sender, EventArgs e)
         {
-            if (CanStap())
-            {
-                PictureBox ClickImage = sender as PictureBox;
-                string[] ParsName = ClickImage.Name.Split('_');
+            PictureBox ClickImage = sender as PictureBox;
+            string[] ParsName = ClickImage.Name.Split('_');
 
-                int IndexSelectImage = Convert.ToInt32(ParsName[1]);
+            int IndexSelectImage = Convert.ToInt32(ParsName[1]);
 
-                GameField[IndexSelectImage].Image = Image.FromFile(ImgName[Player]);
-                GameFieldMap[IndexSelectImage] = Player;
+            GameField[IndexSelectImage].Image = Image.FromFile(ImgName[Player]);
+            GameFieldMap[IndexSelectImage] = Player;
 
-                if (!TestWin(Player))
-                {
-                    //блокируем поле чтобы игрок не смог ходить
-                    LoockField();
-
-                    //if (Computer == 0)
-                    //{
-                        ReplyStep(ParsName[1]);
-                        //ReceivedStep();
-                    //}
-                    //else  //Шаг ПК
-                    //    PC_Step();
-
-                    //пробуем разблокировать поле 
-                    //UnLoockField();
-                }
-                else
-                {
-                    //panel4.Visible = true;
-                    labelResult.Text = "Вы выиграли";
-                    LoockField();
-                }
-            }
+            LockedField();
+            ReplyStep(ParsName[1]);
+            CanStep();
         }
-
-        //void PC_Step()
-        //{
-
-        //    //объявляем функцию генерации случайных чисел 
-        //    Random Rand = new Random();
-        //    GENER:
-
-        //    if (CanStap())
-        //    {
-        //        //получаем число от 0 до 8
-        //        int IndexStep = Rand.Next(0, 8);
-
-        //        //смотрим если ячейка пуста то ставим туда символ ПК
-        //        if (GameFieldMap[IndexStep] == 0)
-        //        {
-        //            //рисуем нужную картинку
-        //            GameField[IndexStep].Image = Image.FromFile(ImgName[Computer]);
-        //            //записываем в поле игры ход компьютера
-        //            GameFieldMap[IndexStep] = Computer;
-
-        //        }
-        //        else
-        //            goto GENER;
-        //        if (TestWin(Computer))
-        //        {
-        //            //panel4.Visible = true;
-        //            labelResult.Text = "Вы Проиграли";
-        //        }
-        //    }
-        //}
 
         bool TestWin(int WHO)
         {
@@ -254,79 +205,81 @@ namespace X_O
             return false;
         }
 
-        bool CanStap()
+        void CanStep()
         {
-            //перебираем все значения игрового поля
-            foreach (int s in GameFieldMap)
-                //если нашли 0 значит есть куда ходить
-                if (s == 0) return true;
-
             //проверяем не выиграл ли игрок
             if (TestWin(Player))
             {
                 labelResult.Text = "Вы выиграли";
-                LoockField();
+                labelResult.BackColor = Color.Green;
+                LockedField();
                 //если не нашли то ходить больше нельзя
-                return false;
+                return;
             }
             //проверяем не выиграл ли игрок
-            if (TestWin(Computer))
+            else if (TestWin(Enemy))
             {
-                labelResult.Text = "Вы проиграли";
+                Invoke((MethodInvoker)delegate { this.labelResult.Text = "Вы проиграли"; });
+                labelResult.BackColor = Color.Red;
                 //прячем панель игры
-                LoockField();
-                return false;
+                LockedField();
+                return;
             }
-            //если ходить больше нельзя и никто не выиграл значит пишем что ничья
-            labelResult.Text = "Ничья";
-            LoockField();
 
-            return false;
+            //перебираем все значения игрового поля
+            foreach (int s in GameFieldMap)
+                //если нашли 0 значит есть куда ходить
+                if (s == 0) return;
+
+            //если ходить больше нельзя и никто не выиграл значит пишем что ничья
+            labelResult.BackColor = Color.PeachPuff;
+            labelResult.Text = "Ничья";
+            LockedField();
+
+            //return false;
         }
 
         private void ToolStripMenuItemNewGame(object sender, EventArgs e)
         {
             NewField();
+            if (Player == 1)
+                ReplyStep("9");
         }
 
-        void NewField ()
+        void NewField()
         {
             //обнуляем карту игры
             GameFieldMap = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             //обнуляем изображение поля
             foreach (PictureBox P in GameField) P.Image = Image.FromFile(ImgName[0]);
             //пробуем разблокировать поле 
-            UnLoockField();
+            UnLockedField();
             labelResult.Text = " ";
+            labelResult.BackColor = Color.LightGray;
         }
 
         private void ToolStripMenuItemCreateServe_Click(object sender, EventArgs e)
         {
             Thread myThread = new Thread(new ThreadStart(CreateServer));
             myThread.Start();
-            ToolStripMenuItemCreateServe.Visible = false;
+            новаяИграToolStripMenuItem.Enabled = true;
+            ToolStripMenuItemCreateServe.Enabled = false;
             NewField();
             panelGameField.Visible = true;
-            LoockField();
-            //Thread startReceived = new Thread(new ThreadStart(ReceivedStep));
-            //startReceived.Start();
+            LockedField();
             Player = 1;
             Enemy = 2;
         }
 
         private void ToolStripMenuItemConnection_Click(object sender, EventArgs e)
         {
-            CreateClient();
-            ToolStripMenuItemConnection.Visible = false;
-            //ToolStripMenuItemNewGame(sender, e);
-            NewField();
-            panelGameField.Visible = true;
-            Player = 2;
-            Enemy = 1;
-            LoockField();
-            Thread myThread = new Thread(new ThreadStart(ReceivedStep));
-            myThread.Start();
-            //ReceivedStep();
+                CreateClient();
+                ToolStripMenuItemConnection.Enabled = false;
+                NewField();
+                panelGameField.Visible = true;
+                Player = 2;
+                Enemy = 1;
+                LockedField();
         }
 
 
@@ -340,9 +293,11 @@ namespace X_O
             {
                 socket = listener.Accept();
 
+                Invoke((MethodInvoker)delegate { this.toolStripStatusLabel.BackColor = Color.Green; });
+                Invoke((MethodInvoker)delegate { this.toolStripStatusLabel.Text = "Подключено"; });
                 ReceivedMessage();
-                UnLoockField();
-                ReplyMessage("Serve");
+                UnLockedField();
+                ReplyMessage(labelPlayer1.Text);
                 ReceivedStep();
 
             }
@@ -357,7 +312,7 @@ namespace X_O
             socket.Shutdown(SocketShutdown.Both);
             socket.Close();
             listener.Close();
-            ToolStripMenuItemCreateServe.Visible = true;
+            ToolStripMenuItemCreateServe.Enabled = true;
         }
 
         private void CreateClient()
@@ -365,10 +320,22 @@ namespace X_O
             IPHostEntry lpHost = Dns.Resolve("127.0.0.1");
             IPAddress ipAddress = lpHost.AddressList[0];
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, 2112);
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(ipEndPoint);
-            ReplyMessage("Client");
-            ReceivedMessage();
+            try
+            {
+                socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                socket.Connect(ipEndPoint);
+
+                toolStripStatusLabel.BackColor = Color.Green;
+                toolStripStatusLabel.Text = "Подключено";
+                ReplyMessage(labelPlayer1.Text);
+                ReceivedMessage();
+                Thread myThread = new Thread(new ThreadStart(ReceivedStep));
+                myThread.Start();
+            }
+            catch (SocketException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void ReplyMessage(string name)  //отправка сообщения сервероу
@@ -393,6 +360,15 @@ namespace X_O
             socket.Send(forwardMessage);
         }
 
+        private void buttonOK_Click(object sender, EventArgs e)
+        {
+            if (textBox1.Text != "")
+            {
+                labelPlayer1.Text = textBox1.Text;
+                panelStart.Visible = false;
+            }
+        }
+
         private void ReceivedStep()  // получение сообщения от сервера
         {
             byte[] receivedBytes = new byte[1024];
@@ -404,13 +380,14 @@ namespace X_O
                 {
                     GameField[IndexSelectImage].Image = Image.FromFile(ImgName[Enemy]);
                     GameFieldMap[IndexSelectImage] = Enemy;
-                    UnLoockField();
+                    UnLockedField();
+
+                    CanStep();
                 }
                 else
                     NewField();
             }
         }
-
         private void CloseClient()
         {
             socket.Shutdown(SocketShutdown.Both);
